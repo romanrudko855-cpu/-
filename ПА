@@ -1,0 +1,276 @@
+-- Adopt Me Pet Spawner Script
+-- Автоматически спавнит 50 самых редких питомцев
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local backpack = player:WaitForChild("Backpack")
+
+-- Список 50 самых редких питомцев в Adopt Me
+local rarePets = {
+    "Shadow Dragon",
+    "Giraffe",
+    "Bat Dragon",
+    "Frost Dragon",
+    "Owl",
+    "Parrot",
+    "Evil Unicorn",
+    "Crow",
+    "Arctic Reindeer",
+    "King Monkey",
+    "Albino Monkey",
+    "Turtle",
+    "Kangaroo",
+    "Queen Bee",
+    "Ninja Monkey",
+    "Golden Penguin",
+    "Golden Rat",
+    "Diamond Unicorn",
+    "Diamond Dragon",
+    "Diamond Griffin",
+    "Flamingo",
+    "Lion",
+    "Blue Dog",
+    "Pink Cat",
+    "Dalmatian",
+    "Elephant",
+    "Hyena",
+    "Cow",
+    "Hedgehog",
+    "Zombie Buffalo",
+    "Puffin",
+    "Swan",
+    "Brown Bear",
+    "Polar Bear",
+    "Rhino",
+    "Platypus",
+    "Meerkat",
+    "Turkey",
+    "Silly Duck",
+    "Wild Boar",
+    "Capybara",
+    "Black Panther",
+    "Blue Scarab",
+    "Green Butterfly",
+    "Red Butterfly",
+    "Gold Scarab",
+    "Diamond King Penguin",
+    "Chameleon",
+    "Lava Dragon",
+    "Candy Hare"
+}
+
+-- Создание GUI
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local Title = Instance.new("TextLabel")
+local SpawnButton = Instance.new("TextButton")
+local PetTypeFrame = Instance.new("Frame")
+local TypeLabel = Instance.new("TextLabel")
+local MFRButton = Instance.new("TextButton")
+local FRButton = Instance.new("TextButton")
+local NFRButton = Instance.new("TextButton")
+local NormalButton = Instance.new("TextButton")
+local StatusLabel = Instance.new("TextLabel")
+local CloseButton = Instance.new("TextButton")
+
+ScreenGui.Name = "PetSpawnerGUI"
+ScreenGui.Parent = player:WaitForChild("PlayerGui")
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+MainFrame.BorderSizePixel = 0
+MainFrame.Position = UDim2.new(0.3, 0, 0.3, 0)
+MainFrame.Size = UDim2.new(0, 350, 0, 400)
+MainFrame.Active = true
+MainFrame.Draggable = true
+
+Title.Name = "Title"
+Title.Parent = MainFrame
+Title.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+Title.Size = UDim2.new(1, 0, 0, 40)
+Title.Font = Enum.Font.GothamBold
+Title.Text = "Adopt Me Pet Spawner"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 20
+
+CloseButton.Name = "CloseButton"
+CloseButton.Parent = Title
+CloseButton.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
+CloseButton.Position = UDim2.new(0.9, 0, 0.1, 0)
+CloseButton.Size = UDim2.new(0, 25, 0, 25)
+CloseButton.Font = Enum.Font.GothamBold
+CloseButton.Text = "X"
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.TextSize = 14
+
+PetTypeFrame.Name = "PetTypeFrame"
+PetTypeFrame.Parent = MainFrame
+PetTypeFrame.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+PetTypeFrame.Position = UDim2.new(0.05, 0, 0.15, 0)
+PetTypeFrame.Size = UDim2.new(0.9, 0, 0, 120)
+
+TypeLabel.Name = "TypeLabel"
+TypeLabel.Parent = PetTypeFrame
+TypeLabel.BackgroundTransparency = 1
+TypeLabel.Position = UDim2.new(0, 0, 0, 0)
+TypeLabel.Size = UDim2.new(1, 0, 0, 30)
+TypeLabel.Font = Enum.Font.Gotham
+TypeLabel.Text = "Выберите тип питомца:"
+TypeLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TypeLabel.TextSize = 16
+
+-- Кнопки для выбора типа питомца
+MFRButton.Name = "MFRButton"
+MFRButton.Parent = PetTypeFrame
+MFRButton.BackgroundColor3 = Color3.fromRGB(255, 170, 0)
+MFRButton.Position = UDim2.new(0.05, 0, 0.3, 0)
+MFRButton.Size = UDim2.new(0.425, 0, 0, 40)
+MFRButton.Font = Enum.Font.GothamBold
+MFRButton.Text = "MFR"
+MFRButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+MFRButton.TextSize = 14
+
+FRButton.Name = "FRButton"
+FRButton.Parent = PetTypeFrame
+FRButton.BackgroundColor3 = Color3.fromRGB(255, 85, 0)
+FRButton.Position = UDim2.new(0.525, 0, 0.3, 0)
+FRButton.Size = UDim2.new(0.425, 0, 0, 40)
+FRButton.Font = Enum.Font.GothamBold
+FRButton.Text = "FR"
+FRButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+FRButton.TextSize = 14
+
+NFRButton.Name = "NFRButton"
+NFRButton.Parent = PetTypeFrame
+NFRButton.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+NFRButton.Position = UDim2.new(0.05, 0, 0.7, 0)
+NFRButton.Size = UDim2.new(0.425, 0, 0, 40)
+NFRButton.Font = Enum.Font.GothamBold
+NFRButton.Text = "NFR"
+NFRButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+NFRButton.TextSize = 14
+
+NormalButton.Name = "NormalButton"
+NormalButton.Parent = PetTypeFrame
+NormalButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+NormalButton.Position = UDim2.new(0.525, 0, 0.7, 0)
+NormalButton.Size = UDim2.new(0.425, 0, 0, 40)
+NormalButton.Font = Enum.Font.GothamBold
+NormalButton.Text = "Normal"
+NormalButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+NormalButton.TextSize = 14
+
+-- Кнопка спавна
+SpawnButton.Name = "SpawnButton"
+SpawnButton.Parent = MainFrame
+SpawnButton.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
+SpawnButton.Position = UDim2.new(0.1, 0, 0.6, 0)
+SpawnButton.Size = UDim2.new(0.8, 0, 0, 50)
+SpawnButton.Font = Enum.Font.GothamBold
+SpawnButton.Text = "СПАВНИТЬ 50 РЕДКИХ ПИТОМЦЕВ"
+SpawnButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+SpawnButton.TextSize = 18
+
+-- Статус
+StatusLabel.Name = "StatusLabel"
+StatusLabel.Parent = MainFrame
+StatusLabel.BackgroundTransparency = 1
+StatusLabel.Position = UDim2.new(0, 0, 0.8, 0)
+StatusLabel.Size = UDim2.new(1, 0, 0, 60)
+StatusLabel.Font = Enum.Font.Gotham
+StatusLabel.Text = "Готово к спавну"
+StatusLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+StatusLabel.TextSize = 14
+
+-- Переменные
+local selectedType = "Normal"
+local isSpawning = false
+
+-- Функция обновления цвета кнопок
+local function updateButtonColors()
+    MFRButton.BackgroundColor3 = selectedType == "MFR" and Color3.fromRGB(255, 255, 0) or Color3.fromRGB(255, 170, 0)
+    FRButton.BackgroundColor3 = selectedType == "FR" and Color3.fromRGB(255, 120, 0) or Color3.fromRGB(255, 85, 0)
+    NFRButton.BackgroundColor3 = selectedType == "NFR" and Color3.fromRGB(0, 220, 255) or Color3.fromRGB(0, 170, 255)
+    NormalButton.BackgroundColor3 = selectedType == "Normal" and Color3.fromRGB(150, 150, 150) or Color3.fromRGB(100, 100, 100)
+end
+
+-- Обработчики кнопок выбора типа
+MFRButton.MouseButton1Click:Connect(function()
+    selectedType = "MFR"
+    updateButtonColors()
+    StatusLabel.Text = "Выбран тип: MFR (Mega Fly Ride)"
+end)
+
+FRButton.MouseButton1Click:Connect(function()
+    selectedType = "FR"
+    updateButtonColors()
+    StatusLabel.Text = "Выбран тип: FR (Fly Ride)"
+end)
+
+NFRButton.MouseButton1Click:Connect(function()
+    selectedType = "NFR"
+    updateButtonColors()
+    StatusLabel.Text = "Выбран тип: NFR (Neon Fly Ride)"
+end)
+
+NormalButton.MouseButton1Click:Connect(function()
+    selectedType = "Normal"
+    updateButtonColors()
+    StatusLabel.Text = "Выбран тип: Normal (Обычный)"
+end)
+
+-- Функция получения префикса для питомца
+local function getPetPrefix()
+    if selectedType == "MFR" then
+        return "Mega Neon Fly Ride "
+    elseif selectedType == "FR" then
+        return "Fly Ride "
+    elseif selectedType == "NFR" then
+        return "Neon Fly Ride "
+    else
+        return ""
+    end
+end
+
+-- Основная функция спавна питомцев
+SpawnButton.MouseButton1Click:Connect(function()
+    if isSpawning then return end
+    
+    isSpawning = true
+    SpawnButton.Text = "СПАВНИМ..."
+    SpawnButton.BackgroundColor3 = Color3.fromRGB(255, 170, 0)
+    
+    local prefix = getPetPrefix()
+    local spawnedCount = 0
+    
+    for i, petName in ipairs(rarePets) do
+        if not isSpawning then break end
+        
+        local fullPetName = prefix .. petName
+        StatusLabel.Text = string.format("Спавним: %s\n(%d/50)", fullPetName, i)
+        
+        -- Имитация команды спавна (замените на реальную функцию спавна)
+        wait(0.1) -- Задержка между спавнами
+        
+        -- Здесь должна быть реальная функция спавна питомцев
+        -- Пример: game:GetService("ReplicatedStorage").RemoteEvents.PetSpawn:FireServer(fullPetName)
+        
+        spawnedCount = i
+    end
+    
+    StatusLabel.Text = string.format("Готово! Спавнено %d питомцев\nТип: %s", spawnedCount, selectedType)
+    SpawnButton.Text = "СПАВНИТЬ 50 РЕДКИХ ПЕТОВ"
+    SpawnButton.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
+    isSpawning = false
+end)
+
+-- Кнопка закрытия
+CloseButton.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
+
+-- Инициализация
+updateButtonColors()
+StatusLabel.Text = "Выберите тип питомца и нажмите кнопку"
